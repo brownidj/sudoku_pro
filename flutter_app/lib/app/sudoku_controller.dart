@@ -202,6 +202,7 @@ class SudokuController extends ChangeNotifier {
       _ => 'numbers',
     };
     _settings.setContentMode(next);
+    _saveGameSession();
     _render(
       'Mode: ${switch (next) {
         'animals' => 'Animals',

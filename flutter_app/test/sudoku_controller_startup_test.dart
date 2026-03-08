@@ -97,4 +97,25 @@ void main() {
     final sessionJson = jsonDecode(fakePrefs.savedSession!);
     expect(sessionJson['version'], 1);
   });
+
+  test('Content mode dropdown selection persists when restoring a session', () async {
+    final fakePrefs = FakePreferencesStore();
+    final seedController = SudokuController(preferencesStore: fakePrefs);
+    await seedController.ready;
+
+    final editable = firstEditableCoord(seedController.state);
+    expect(editable, isNotNull);
+    seedController.onCellTapped(editable!);
+    seedController.onDigitPressed(1);
+    expect(fakePrefs.savedSession, isNotNull);
+
+    seedController.onContentModeChanged('butterflies');
+
+    final sessionJson = jsonDecode(fakePrefs.savedSession!);
+    expect(sessionJson['settings']['contentMode'], 'butterflies');
+
+    final restoreController = SudokuController(preferencesStore: fakePrefs);
+    await restoreController.ready;
+    expect(restoreController.state.contentMode, 'butterflies');
+  });
 }

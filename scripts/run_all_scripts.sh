@@ -1,6 +1,10 @@
 #!/usr/bin/env zsh
 set -u
 
+if [[ -z "${ZSH_VERSION:-}" ]]; then
+  exec zsh "$0" "$@"
+fi
+
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 SELF_NAME="$(basename "$0")"
@@ -25,7 +29,7 @@ for script_path in "${scripts[@]}"; do
   elif [[ "$script_name" == *.py ]]; then
     (cd "$ROOT_DIR" && python3 "$script_path")
   elif [[ "$script_name" == *.sh ]]; then
-    (cd "$ROOT_DIR" && bash "$script_path")
+    (cd "$ROOT_DIR" && zsh "$script_path")
   else
     echo "SKIP: unsupported script type: $script_name"
     continue

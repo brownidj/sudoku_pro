@@ -168,7 +168,7 @@ void main() {
     );
     await tester.pumpAndSettle();
     await tester.tap(find.text('Resume'));
-    await tester.pumpAndSettle();
+    await tester.pump();
     expect(resumeService.newGameCalls, 0);
   });
 
@@ -188,7 +188,7 @@ void main() {
     );
     await tester.pumpAndSettle();
     await tester.tap(find.text('New game'));
-    await tester.pumpAndSettle();
+    await tester.pump();
     expect(newGameService.newGameCalls, 1);
   });
 }

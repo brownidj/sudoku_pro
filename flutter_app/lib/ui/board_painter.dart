@@ -104,11 +104,10 @@ class SudokuBoardPainter extends CustomPainter {
         }
 
         if (cell.value != null) {
-          if (state.contentMode != 'numbers' &&
-              animalImages.containsKey(cell.value)) {
-            _drawAnimal(canvas, rect, animalImages[cell.value]!, cell.value!);
-          } else {
+          if (state.contentMode == 'numbers') {
             _drawValue(canvas, rect, cell.value!, cell.given, cellSize);
+          } else if (animalImages.containsKey(cell.value)) {
+            _drawAnimal(canvas, rect, animalImages[cell.value]!, cell.value!);
           }
         } else if (cell.notes.isNotEmpty) {
           _drawNotes(canvas, rect, cell.notes, cellSize);
@@ -170,7 +169,6 @@ class SudokuBoardPainter extends CustomPainter {
     final targetPx = logicalSize * devicePixelRatio;
     final sizePx = bestNoteSize(targetPx, noteImagesBySize.keys);
     if (sizePx == 0 || !noteImagesBySize.containsKey(sizePx)) {
-      _drawNumberNotes(canvas, rect, notesSorted, gridSize, subCellSize);
       return;
     }
     final maxNotes = gridSize * gridSize;

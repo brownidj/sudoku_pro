@@ -16,9 +16,14 @@ import 'package:flutter_app/ui/widgets/sudoku_drawer.dart';
 import 'package:flutter_app/ui/widgets/top_controls.dart';
 
 class SudokuScreen extends StatefulWidget {
-  const SudokuScreen({super.key, required this.controller});
+  const SudokuScreen({
+    super.key,
+    required this.controller,
+    AnimalAssetService? animalAssetService,
+  }) : animalAssetService = animalAssetService ?? const AnimalAssetService();
 
   final SudokuController controller;
+  final AnimalAssetService animalAssetService;
 
   @override
   State<SudokuScreen> createState() => _SudokuScreenState();
@@ -27,9 +32,10 @@ class SudokuScreen extends StatefulWidget {
 class _SudokuScreenState extends State<SudokuScreen> {
   final Map<String, Map<int, ui.Image>> _animalImages = {};
   final Map<String, Map<int, Map<int, ui.Image>>> _noteImages = {};
-  final AnimalAssetService _animalAssetService = const AnimalAssetService();
+  final Map<int, String> _butterflyDescriptions = {};
   final TooltipOverlayService _tooltipService = TooltipOverlayService();
   Future<void>? _animalLoad;
+  bool _animalAssetsReady = false;
   late final CandidateSelectionController _candidateController;
 
   @override
@@ -55,13 +61,29 @@ class _SudokuScreenState extends State<SudokuScreen> {
   }
 
   Future<void> _loadAnimalImages() async {
-    final bundle = await _animalAssetService.load();
-    _animalImages
-      ..clear()
-      ..addAll(bundle.animalImages);
-    _noteImages
-      ..clear()
-      ..addAll(bundle.noteImages);
+    try {
+      final bundle = await widget.animalAssetService.load();
+      _animalImages
+        ..clear()
+        ..addAll(bundle.animalImages);
+      _noteImages
+        ..clear()
+        ..addAll(bundle.noteImages);
+      try {
+        final descriptions = await AnimalImageCache.loadButterflyDescriptions();
+        _butterflyDescriptions
+          ..clear()
+          ..addAll(descriptions);
+      } catch (_) {
+        _butterflyDescriptions.clear();
+      }
+    } catch (_) {
+      _animalImages.clear();
+      _noteImages.clear();
+      _butterflyDescriptions.clear();
+    } finally {
+      _animalAssetsReady = true;
+    }
     if (mounted) {
       setState(() {});
     }
@@ -81,13 +103,32 @@ class _SudokuScreenState extends State<SudokuScreen> {
       builder: (context, _) {
         final state = widget.controller.state;
         final style = styleForName(state.styleName);
+        final waitingForAssets =
+            state.contentMode != 'numbers' && !_animalAssetsReady;
+
+        if (waitingForAssets) {
+          return const Scaffold(
+            body: SafeArea(
+              child: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CircularProgressIndicator(),
+                    SizedBox(height: 12),
+                    Text('Please wait...'),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
 
         return Scaffold(
           appBar: AppBar(
             automaticallyImplyLeading: false,
             title: const Align(
               alignment: Alignment.centerLeft,
-              child: Text('ZuDoKu 0.4.4'),
+              child: Text('ZuDoKu Pro 0.1.0'),
             ),
             actions: [
               Builder(
@@ -182,6 +223,39 @@ class _SudokuScreenState extends State<SudokuScreen> {
     final cell = state.board.cells[coord.row][coord.col];
     final value = cell.value;
     if (value == null) {
+      return;
+    }
+    if (state.contentMode == 'butterflies') {
+      final image = _animalImages['butterflies']?[value];
+      final description =
+          _butterflyDescriptions[value] ?? 'Description unavailable.';
+      showDialog<void>(
+        context: context,
+        builder: (context) => AlertDialog(
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  width: 240,
+                  height: 240,
+                  child: image == null
+                      ? const SizedBox.shrink()
+                      : FittedBox(
+                          fit: BoxFit.contain,
+                          child: RawImage(image: image),
+                        ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  description,
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
       return;
     }
     final name = AnimalImageCache.displayNameForDigit(state.contentMode, value);

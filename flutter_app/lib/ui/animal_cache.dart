@@ -8,6 +8,28 @@ class AnimalImageCache {
   static Future<Map<String, Map<int, ui.Image>>>? _future;
   static Future<Map<String, Map<int, Map<int, ui.Image>>>>? _notesFuture;
   static Map<String, Map<int, Map<int, ui.Image>>>? _notesCache;
+  static Future<Map<int, String>>? _butterflyDescriptionsFuture;
+  static Map<int, String>? _butterflyDescriptionsCache;
+  static const Map<int, String> _defaultButterflyDescriptions = {
+    1:
+        'The Monarch butterfly is famous for orange wings veined in black and remarkable migrations. It is found across North America, breeding in Canada and the United States, then wintering in central Mexico and coastal California groves. Monarchs favor milkweed habitats, open fields, roadsides, and sunny meadows with blooming nectar plants.',
+    2:
+        'The Swallowtail butterfly displays elegant tails, bold yellow and black markings, and strong gliding flight. It is found across Europe, Asia, North America, and parts of Africa, depending on species. Swallowtails thrive in gardens, river valleys, wood edges, and grasslands where host plants and nectar flowers are plentiful year-round locally.',
+    3:
+        'The Blue Morpho butterfly dazzles with iridescent blue upper wings and brown undersides marked with eye spots. It is found in tropical forests of Central and South America, especially Brazil, Costa Rica, and Peru. Blue Morphos glide along forest edges, feeding on fermenting fruit, tree sap, and moist patches frequently.',
+    4:
+        'The Glasswing butterfly is known for transparent wings edged in brown and delicate, floating flight. It is found from Mexico through Central America into northern South America, including Colombia and Ecuador. Glasswings inhabit humid tropical forests, where adults visit flowers for nectar and contribute importantly to pollination cycles locally daily.',
+    5:
+        'The Peacock butterfly has rich reddish wings with striking eye spots that startle predators effectively. It is found across Europe and temperate Asia, including the United Kingdom, Scandinavia, and Japan. Peacock butterflies frequent woodland clearings, hedgerows, gardens, and parks, feeding on nectar and overwintering in sheltered buildings or tree hollows.',
+    6:
+        'The Zebra Longwing butterfly features long narrow wings striped in black and yellow, flying slowly and gracefully. It is found in the southern United States, Mexico, Central America, and parts of South America. Zebra Longwings inhabit subtropical hammocks, forest edges, and gardens, feeding on nectar and pollen throughout seasons year-round.',
+    7:
+        'The Sulphur butterfly is typically bright yellow or orange, with quick fluttering flight over open ground. It is found widely across North and South America, especially in warm grasslands, fields, and roadsides. Sulphurs rely on legume host plants, and adults visit clover, asters, and other common nectar flowers daily nearby.',
+    8:
+        'The Leaf butterfly resembles a dead leaf when wings are closed, providing remarkable camouflage from predators. It is found in South and Southeast Asia, including India, Sri Lanka, Thailand, and Indonesia. Leaf butterflies inhabit forest understories and shaded trails, where they feed on fruit juices and tree sap regularly nearby.',
+    9:
+        'The Metalmark butterfly is generally small, with metallic-looking spots and intricate wing patterns. It is found in the Americas, especially from the southwestern United States through Mexico to South America, depending on species. Metalmarks occupy chaparral, deserts, dry scrub, and tropical habitats, using specialized host plants and sunny perches regularly.',
+  };
 
   static Future<Map<String, Map<int, ui.Image>>> loadAll() {
     _future ??= _loadAll();
@@ -22,6 +44,11 @@ class AnimalImageCache {
   static Future<Map<int, ui.Image>> loadVariant(String variant) async {
     final all = await loadAll();
     return all[variant] ?? all['simple'] ?? <int, ui.Image>{};
+  }
+
+  static Future<Map<int, String>> loadButterflyDescriptions() {
+    _butterflyDescriptionsFuture ??= _loadButterflyDescriptions();
+    return _butterflyDescriptionsFuture!;
   }
 
   static Future<Map<String, Map<int, ui.Image>>> _loadAll() async {
@@ -169,6 +196,33 @@ class AnimalImageCache {
       return '';
     }
     return name[0].toUpperCase();
+  }
+
+  static Future<Map<int, String>> _loadButterflyDescriptions() async {
+    try {
+      final raw = await rootBundle.loadString(
+        'assets/images/butterflies/description/descriptions.txt',
+      );
+      final parts = raw
+          .split(RegExp(r'\n\s*\n'))
+          .map((e) => e.trim())
+          .where((e) => e.isNotEmpty)
+          .toList(growable: false);
+      final descriptions = <int, String>{};
+      for (var i = 0; i < parts.length && i < 9; i += 1) {
+        descriptions[i + 1] = parts[i];
+      }
+      if (descriptions.length == 9) {
+        _butterflyDescriptionsCache = descriptions;
+        return _butterflyDescriptionsCache!;
+      }
+    } catch (_) {
+      // Fallback to built-in descriptions.
+    }
+    _butterflyDescriptionsCache = Map<int, String>.from(
+      _defaultButterflyDescriptions,
+    );
+    return _butterflyDescriptionsCache!;
   }
 
   static Future<ui.Image> _decodeImage(Uint8List bytes) async {

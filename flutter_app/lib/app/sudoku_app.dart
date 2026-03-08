@@ -21,7 +21,7 @@ class _SudokuAppState extends State<SudokuApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'ZudoKu Pro',
+      title: 'ZuDoKu Pro',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueGrey),
         useMaterial3: true,

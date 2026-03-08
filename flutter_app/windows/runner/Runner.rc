@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "ZudoKu Pro" "\0"
+            VALUE "FileDescription", "ZuDoKu Pro" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "ZudoKu Pro" "\0"
+            VALUE "InternalName", "ZuDoKu Pro" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2026 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "ZudoKu Pro.exe" "\0"
-            VALUE "ProductName", "ZudoKu Pro" "\0"
+            VALUE "OriginalFilename", "ZuDoKu Pro.exe" "\0"
+            VALUE "ProductName", "ZuDoKu Pro" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

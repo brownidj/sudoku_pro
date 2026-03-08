@@ -84,7 +84,7 @@ class CandidatePanel extends StatelessWidget {
     }
     final image = animalImages[digit];
     if (image == null) {
-      return Text('$digit');
+      return const SizedBox.shrink();
     }
     final name = AnimalImageCache.displayNameForDigit(contentMode, digit);
     return Tooltip(
