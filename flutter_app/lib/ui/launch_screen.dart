@@ -1,3 +1,4 @@
+import 'package:flutter_app/app/app_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/app/sudoku_controller.dart';
 import 'package:flutter_app/ui/sudoku_screen.dart';
@@ -60,7 +61,7 @@ class _LaunchScreenState extends State<LaunchScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'ZuDoKu Pro 0.1.0',
+                  AppInfo.launchTitle,
                   style: theme.textTheme.headlineSmall,
                   textAlign: TextAlign.center,
                 ),

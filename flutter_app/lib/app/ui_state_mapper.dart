@@ -1,3 +1,4 @@
+import 'package:flutter_app/app/candidate_panel_state.dart';
 import 'package:flutter_app/app/settings_state.dart';
 import 'package:flutter_app/app/ui_state.dart';
 import 'package:flutter_app/domain/types.dart';
@@ -12,6 +13,7 @@ class UiStateMapperInput {
   final Set<Coord> solutionAddedCells;
   final Grid? solutionGrid;
   final bool gameOver;
+  final CandidatePanelState candidatePanel;
 
   const UiStateMapperInput({
     required this.board,
@@ -23,6 +25,7 @@ class UiStateMapperInput {
     required this.solutionAddedCells,
     required this.solutionGrid,
     required this.gameOver,
+    required this.candidatePanel,
   });
 }
 
@@ -74,6 +77,9 @@ class UiStateMapper {
       puzzleMode: input.settings.puzzleMode,
       selected: input.selected,
       gameOver: input.gameOver,
+      candidateVisible: input.candidatePanel.visible && !input.gameOver,
+      candidateDigits: input.candidatePanel.digits,
+      candidateSelectedNotes: input.candidatePanel.selectedNotes,
     );
   }
 }

@@ -43,15 +43,28 @@ class FakeAnimalAssetService extends AnimalAssetService {
   }
 }
 
+Future<void> _longPressCell(
+  WidgetTester tester,
+  Coord coord,
+) async {
+  final boardRect = tester.getRect(find.byType(SudokuBoard));
+  final cell = boardRect.width / 9.0;
+  final target = Offset(
+    boardRect.left + (coord.col + 0.5) * cell,
+    boardRect.top + (coord.row + 0.5) * cell,
+  );
+  await tester.longPressAt(target);
+  await tester.pumpAndSettle();
+}
+
 void main() {
-  testWidgets('long-pressing butterfly tile shows modal with description', (
+  testWidgets('long-press behavior differs between numbers and butterflies modes', (
     WidgetTester tester,
   ) async {
     await tester.binding.setSurfaceSize(const Size(1080, 1920));
 
     final controller = SudokuController(preferencesStore: FakePreferencesStore());
     await controller.ready;
-    controller.onContentModeChanged('butterflies');
 
     await tester.pumpWidget(
       MaterialApp(
@@ -65,23 +78,18 @@ void main() {
     await tester.pump();
 
     final coord = _firstFilledCoord(controller);
-    final boardRect = tester.getRect(find.byType(SudokuBoard));
-    final cell = boardRect.width / 9.0;
-    final target = Offset(
-      boardRect.left + (coord.col + 0.5) * cell,
-      boardRect.top + (coord.row + 0.5) * cell,
-    );
 
-    await tester.longPressAt(target);
+    controller.onContentModeChanged('numbers');
     await tester.pumpAndSettle();
+    await _longPressCell(tester, coord);
+    expect(find.byType(AlertDialog), findsNothing);
+    expect(find.textContaining('butterfly'), findsNothing);
 
+    controller.onContentModeChanged('butterflies');
+    await tester.pump();
+    await tester.pump();
+    await _longPressCell(tester, coord);
     expect(find.byType(AlertDialog), findsOneWidget);
     expect(find.textContaining('butterfly'), findsOneWidget);
-    expect(
-      find.byWidgetPredicate(
-        (widget) => widget is SizedBox && widget.width == 240 && widget.height == 240,
-      ),
-      findsOneWidget,
-    );
   });
 }

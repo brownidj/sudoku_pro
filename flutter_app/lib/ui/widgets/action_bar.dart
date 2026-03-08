@@ -32,7 +32,9 @@ class ActionBar extends StatelessWidget {
             child: OutlinedButton(
               style: OutlinedButton.styleFrom(
                 backgroundColor: state.notesMode
-                    ? Theme.of(context).colorScheme.primary.withOpacity(0.15)
+                    ? Theme.of(
+                        context,
+                      ).colorScheme.primary.withValues(alpha: 0.15)
                     : null,
                 side: BorderSide(
                   color: state.notesMode

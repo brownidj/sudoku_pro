@@ -6,10 +6,12 @@ import 'package:flutter_app/ui/animal_cache.dart';
 class AnimalAssetBundle {
   final Map<String, Map<int, ui.Image>> animalImages;
   final Map<String, Map<int, Map<int, ui.Image>>> noteImages;
+  final Map<int, String> butterflyDescriptions;
 
   const AnimalAssetBundle({
     required this.animalImages,
     required this.noteImages,
+    this.butterflyDescriptions = const {},
   });
 }
 
@@ -19,6 +21,7 @@ class AnimalAssetService {
   Future<AnimalAssetBundle> load() async {
     final images = await AnimalImageCache.loadAll();
     Map<String, Map<int, Map<int, ui.Image>>> notes = const {};
+    Map<int, String> butterflyDescriptions = const {};
 
     try {
       notes = await AnimalImageCache.loadNotesAll();
@@ -27,6 +30,17 @@ class AnimalAssetService {
       notes = const {};
     }
 
-    return AnimalAssetBundle(animalImages: images, noteImages: notes);
+    try {
+      butterflyDescriptions = await AnimalImageCache.loadButterflyDescriptions();
+    } on Exception catch (error) {
+      AppDebug.log('Failed to load butterfly descriptions: $error');
+      butterflyDescriptions = const {};
+    }
+
+    return AnimalAssetBundle(
+      animalImages: images,
+      noteImages: notes,
+      butterflyDescriptions: butterflyDescriptions,
+    );
   }
 }

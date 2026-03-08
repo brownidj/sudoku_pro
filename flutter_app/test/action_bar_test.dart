@@ -37,6 +37,9 @@ UiState _state() {
     puzzleMode: 'multi',
     selected: null,
     gameOver: false,
+    candidateVisible: false,
+    candidateDigits: const [],
+    candidateSelectedNotes: const {},
   );
 }
 

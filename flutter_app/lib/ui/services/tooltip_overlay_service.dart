@@ -11,9 +11,6 @@ class TooltipOverlayService {
     _entry?.remove();
 
     final overlay = Overlay.of(context);
-    if (overlay == null) {
-      return;
-    }
 
     final size = MediaQuery.of(context).size;
     const tooltipPadding = EdgeInsets.symmetric(horizontal: 10, vertical: 6);
@@ -50,7 +47,7 @@ class TooltipOverlayService {
           child: Container(
             padding: tooltipPadding,
             decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.8),
+              color: Colors.black.withValues(alpha: 0.8),
               borderRadius: BorderRadius.circular(6),
             ),
             child: Text(
