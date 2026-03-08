@@ -110,7 +110,8 @@ class SudokuBoardArea extends StatelessWidget {
             CandidatePanel(
               visible: candidateVisible,
               candidateDigits: candidateDigits,
-              showAnimals: state.contentMode == 'animals',
+              showImages: state.contentMode != 'numbers',
+              contentMode: state.contentMode,
               notesMode: state.notesMode,
               selectedNotes: selectedNotes,
               animalImages: animalImages,

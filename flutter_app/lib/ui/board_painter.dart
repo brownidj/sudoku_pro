@@ -73,7 +73,13 @@ class SudokuBoardPainter extends CustomPainter {
           peerBox: peerBox,
         );
 
-        canvas.drawRect(rect, Paint()..color = model.background);
+        final hasImageValue =
+            cell.value != null && animalImages.containsKey(cell.value);
+        final cellBackground =
+            state.contentMode == 'butterflies' && hasImageValue
+            ? Colors.white
+            : model.background;
+        canvas.drawRect(rect, Paint()..color = cellBackground);
 
         if (state.gameOver) {
           Color? highlight;
@@ -98,7 +104,7 @@ class SudokuBoardPainter extends CustomPainter {
         }
 
         if (cell.value != null) {
-          if (state.contentMode == 'animals' &&
+          if (state.contentMode != 'numbers' &&
               animalImages.containsKey(cell.value)) {
             _drawAnimal(canvas, rect, animalImages[cell.value]!, cell.value!);
           } else {
@@ -163,23 +169,28 @@ class SudokuBoardPainter extends CustomPainter {
     final logicalSize = subCellSize * 0.95;
     final targetPx = logicalSize * devicePixelRatio;
     final sizePx = bestNoteSize(targetPx, noteImagesBySize.keys);
-    if (sizePx == 0) {
-      return;
-    }
-    if (!noteImagesBySize.containsKey(sizePx)) {
+    if (sizePx == 0 || !noteImagesBySize.containsKey(sizePx)) {
+      _drawNumberNotes(canvas, rect, notesSorted, gridSize, subCellSize);
       return;
     }
     final maxNotes = gridSize * gridSize;
     for (var i = 0; i < notesSorted.length && i < maxNotes; i += 1) {
       final digit = notesSorted[i];
-      final image = noteImagesBySize[sizePx]?[digit];
-      if (image == null) {
-        continue;
-      }
       final row = i ~/ gridSize;
       final col = i % gridSize;
       final cellLeft = rect.left + col * subCellSize;
       final cellTop = rect.top + row * subCellSize;
+      final cellRect = Rect.fromLTWH(
+        cellLeft,
+        cellTop,
+        subCellSize,
+        subCellSize,
+      );
+      final image = noteImagesBySize[sizePx]?[digit];
+      if (image == null) {
+        _drawNoteDigit(canvas, cellRect, digit);
+        continue;
+      }
       final left = cellLeft + (subCellSize - logicalSize) / 2;
       final top = cellTop + (subCellSize - logicalSize) / 2;
       final target = Rect.fromLTWH(left, top, logicalSize, logicalSize);
@@ -247,6 +258,9 @@ class SudokuBoardPainter extends CustomPainter {
   }
 
   double _animalTargetSize(double cellSize, int digit) {
+    if (state.contentMode == 'butterflies') {
+      return cellSize * 0.9;
+    }
     return cellSize * 0.7;
   }
 

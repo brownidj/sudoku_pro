@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 class AnimalImageCache {
@@ -26,7 +27,8 @@ class AnimalImageCache {
   static Future<Map<String, Map<int, ui.Image>>> _loadAll() async {
     final simple = await _loadImages(variant: 'simple');
     final cute = await _loadImages(variant: 'cute');
-    return {'simple': simple, 'cute': cute};
+    final butterflies = await _loadButterflyImages();
+    return {'simple': simple, 'cute': cute, 'butterflies': butterflies};
   }
 
   static Future<Map<String, Map<int, Map<int, ui.Image>>>>
@@ -34,13 +36,16 @@ class AnimalImageCache {
     final sizes = [16, 20, 24, 32];
     final simple = <int, Map<int, ui.Image>>{};
     final cute = <int, Map<int, ui.Image>>{};
+    final butterflies = <int, Map<int, ui.Image>>{};
     final simpleNotes = await _loadNotesImages(variant: 'simple');
     final cuteNotes = await _loadNotesImages(variant: 'cute');
+    final butterflyNotes = await _loadButterflyImages();
     for (final size in sizes) {
       simple[size] = Map<int, ui.Image>.from(simpleNotes);
       cute[size] = Map<int, ui.Image>.from(cuteNotes);
+      butterflies[size] = Map<int, ui.Image>.from(butterflyNotes);
     }
-    _notesCache = {'simple': simple, 'cute': cute};
+    _notesCache = {'simple': simple, 'cute': cute, 'butterflies': butterflies};
     return _notesCache!;
   }
 
@@ -76,6 +81,23 @@ class AnimalImageCache {
     return images;
   }
 
+  static Future<Map<int, ui.Image>> _loadButterflyImages() async {
+    final images = <int, ui.Image>{};
+    for (var d = 1; d <= 9; d += 1) {
+      final name = _butterflyName(d);
+      try {
+        final data = await rootBundle.load(
+          'assets/images/butterflies/${d}_${name}.png',
+        );
+        final image = await _decodeImage(data.buffer.asUint8List());
+        images[d] = image;
+      } on FlutterError {
+        // Missing butterfly assets remain placeholders for now.
+      }
+    }
+    return images;
+  }
+
   static Map<int, ui.Image> notesFor(String variant, int size) {
     return _notesCache?[variant]?[size] ?? <int, ui.Image>{};
   }
@@ -105,7 +127,39 @@ class AnimalImageCache {
     }
   }
 
+  static String _butterflyName(int digit) {
+    switch (digit) {
+      case 1:
+        return 'monarch';
+      case 2:
+        return 'swallowtail';
+      case 3:
+        return 'blue_morpho';
+      case 4:
+        return 'glasswing';
+      case 5:
+        return 'peacock_butterfly';
+      case 6:
+        return 'zebra_longwing';
+      case 7:
+        return 'sulphur_butterfly';
+      case 8:
+        return 'leaf_butterfly';
+      case 9:
+        return 'metalmark_butterfly';
+      default:
+        return 'monarch';
+    }
+  }
+
   static String nameForDigit(int digit) {
+    return _animalName(digit);
+  }
+
+  static String displayNameForDigit(String contentMode, int digit) {
+    if (contentMode == 'butterflies') {
+      return _butterflyName(digit).replaceAll('_', ' ');
+    }
     return _animalName(digit);
   }
 

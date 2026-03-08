@@ -4,12 +4,34 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3bc0d4ba-8847-46c7-8092-e5015b3597c6" name="Changes" comment="Prior to refactoring">
+    <list default="true" id="3bc0d4ba-8847-46c7-8092-e5015b3597c6" name="Changes" comment="Post refactoring, before Notes icon colour change">
+      <change beforePath="$PROJECT_DIR$/.idea/Sudoku_01.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Sudoku_02.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flutter_app/android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/flutter_app/android/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flutter_app/ios/Runner.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/flutter_app/ios/Runner.xcodeproj/project.pbxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flutter_app/ios/Runner/Info.plist" beforeDir="false" afterPath="$PROJECT_DIR$/flutter_app/ios/Runner/Info.plist" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flutter_app/lib/app/game_session_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/flutter_app/lib/app/game_session_service.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flutter_app/lib/app/settings_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/flutter_app/lib/app/settings_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flutter_app/lib/app/sudoku_app.dart" beforeDir="false" afterPath="$PROJECT_DIR$/flutter_app/lib/app/sudoku_app.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/flutter_app/lib/app/sudoku_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/flutter_app/lib/app/sudoku_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flutter_app/lib/ui/animal_cache.dart" beforeDir="false" afterPath="$PROJECT_DIR$/flutter_app/lib/ui/animal_cache.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flutter_app/lib/ui/board_painter.dart" beforeDir="false" afterPath="$PROJECT_DIR$/flutter_app/lib/ui/board_painter.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flutter_app/lib/ui/launch_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/flutter_app/lib/ui/launch_screen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/flutter_app/lib/ui/sudoku_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/flutter_app/lib/ui/sudoku_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/flutter_app/test/launch_screen_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/flutter_app/test/launch_screen_test.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/dart_refactor_candidates.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/dart_refactor_candidates.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flutter_app/lib/ui/widgets/candidate_panel.dart" beforeDir="false" afterPath="$PROJECT_DIR$/flutter_app/lib/ui/widgets/candidate_panel.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flutter_app/lib/ui/widgets/sudoku_board_area.dart" beforeDir="false" afterPath="$PROJECT_DIR$/flutter_app/lib/ui/widgets/sudoku_board_area.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flutter_app/lib/ui/widgets/sudoku_drawer.dart" beforeDir="false" afterPath="$PROJECT_DIR$/flutter_app/lib/ui/widgets/sudoku_drawer.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flutter_app/lib/ui/widgets/top_controls.dart" beforeDir="false" afterPath="$PROJECT_DIR$/flutter_app/lib/ui/widgets/top_controls.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flutter_app/linux/runner/my_application.cc" beforeDir="false" afterPath="$PROJECT_DIR$/flutter_app/linux/runner/my_application.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flutter_app/macos/Runner.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/flutter_app/macos/Runner.xcodeproj/project.pbxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flutter_app/macos/Runner/Configs/AppInfo.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/flutter_app/macos/Runner/Configs/AppInfo.xcconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flutter_app/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/flutter_app/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flutter_app/test/preferences_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/flutter_app/test/preferences_test.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flutter_app/test/sudoku_controller_gameplay_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/flutter_app/test/sudoku_controller_gameplay_test.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flutter_app/test/widget_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/flutter_app/test/widget_test.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flutter_app/web/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/flutter_app/web/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flutter_app/web/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/flutter_app/web/manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flutter_app/windows/runner/Runner.rc" beforeDir="false" afterPath="$PROJECT_DIR$/flutter_app/windows/runner/Runner.rc" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,7 +39,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="656" />
+    <option name="cachedIndexableFilesCount" value="707" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="FileTemplateManagerImpl">
@@ -36,12 +58,12 @@
     &quot;assignee&quot;: &quot;brownidj&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/brownidj/sudoku_01.git&quot;,
-    &quot;accountId&quot;: &quot;2df51efd-2d78-4bce-b0ba-4e8ff4707065&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/brownidj/sudoku_pro",
+    "accountId": "2df51efd-2d78-4bce-b0ba-4e8ff4707065"
   }
-}</component>
+}]]></component>
   <component name="McpProjectServerCommands">
     <commands />
     <urls />
@@ -72,7 +94,7 @@
     "ai.playground.ignore.import.keys.banner.in.settings": "true",
     "dart.analysis.tool.window.visible": "false",
     "git-widget-placeholder": "refactor/architecture-cleanup",
-    "last_opened_file_path": "/Users/david/PycharmProjects/Sudoku_01/flutter_app/assets/images/icons",
+    "last_opened_file_path": "/Users/david/PycharmProjects/Sudoku_02",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -104,7 +126,7 @@
   </component>
   <component name="RunManager" selected="Python.main">
     <configuration name="fix_animal_images" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="Sudoku_01" />
+      <module name="Sudoku_02" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -128,7 +150,7 @@
       <method v="2" />
     </configuration>
     <configuration name="generate_animal_images" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="Sudoku_01" />
+      <module name="Sudoku_02" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -152,7 +174,7 @@
       <method v="2" />
     </configuration>
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="Sudoku_01" />
+      <module name="Sudoku_02" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -176,7 +198,7 @@
       <method v="2" />
     </configuration>
     <configuration name="Python tests in tests" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
-      <module name="Sudoku_01" />
+      <module name="Sudoku_02" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -223,7 +245,8 @@
       <workItem from="1771997958245" duration="265000" />
       <workItem from="1771998312707" duration="3390000" />
       <workItem from="1772058139625" duration="2108000" />
-      <workItem from="1772926575188" duration="8794000" />
+      <workItem from="1772926575188" duration="13888000" />
+      <workItem from="1772949733063" duration="975000" />
     </task>
     <task id="LOCAL-00001" summary="Implement true Sudoku puzzle generator (solution → mask) with tests&#10;&#10;- Added randomized backtracking generator to produce full valid solutions&#10;- Implemented masking phase to create puzzles by difficulty (easy/medium/hard)&#10;- Switched generate_puzzle() to use solution→mask pipeline&#10;- Introduced target givens heuristics per difficulty&#10;- Kept seed-based randomization for backward compatibility&#10;- Added comprehensive tests for generator correctness and difficulty ranges&#10;&#10;This establishes a clean foundation for future uniqueness checks and&#10;logic-based difficulty grading.">
       <option name="closed" value="true" />
@@ -497,15 +520,37 @@
       <option name="project" value="LOCAL" />
       <updated>1772933738517</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="First major refactoring">
+      <option name="closed" value="true" />
+      <created>1772935606965</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1772935606965</updated>
+    </task>
+    <task id="LOCAL-00036" summary="Added various files to commit">
+      <option name="closed" value="true" />
+      <created>1772936618826</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1772936618826</updated>
+    </task>
+    <task id="LOCAL-00037" summary="Post refactoring, before Notes icon colour change">
+      <option name="closed" value="true" />
+      <created>1772937739615</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1772937739615</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Implement true Sudoku puzzle generator (solution → mask) with tests&#10;&#10;- Added randomized backtracking generator to produce full valid solutions&#10;- Implemented masking phase to create puzzles by difficulty (easy/medium/hard)&#10;- Switched generate_puzzle() to use solution→mask pipeline&#10;- Introduced target givens heuristics per difficulty&#10;- Kept seed-based randomization for backward compatibility&#10;- Added comprehensive tests for generator correctness and difficulty ranges&#10;&#10;This establishes a clean foundation for future uniqueness checks and&#10;logic-based difficulty grading." />
-    <MESSAGE value="Python phase complete" />
     <MESSAGE value="Animals added" />
     <MESSAGE value="requirements.txt added" />
     <MESSAGE value="Tap to see list implemented" />
@@ -528,7 +573,10 @@
     <MESSAGE value="Added game board persistence" />
     <MESSAGE value="Merge remote-tracking branch 'origin/main'" />
     <MESSAGE value="Prior to refactoring" />
-    <option name="LAST_COMMIT_MESSAGE" value="Prior to refactoring" />
+    <MESSAGE value="First major refactoring" />
+    <MESSAGE value="Added various files to commit" />
+    <MESSAGE value="Post refactoring, before Notes icon colour change" />
+    <option name="LAST_COMMIT_MESSAGE" value="Post refactoring, before Notes icon colour change" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Sudoku_01$generate_animal_images.coverage" NAME="generate_animal_images Coverage Results" MODIFIED="1768784519892" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utils" />

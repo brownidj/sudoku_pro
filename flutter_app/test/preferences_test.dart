@@ -21,4 +21,19 @@ void main() {
     expect(state.styleName, 'Classic');
     expect(state.difficulty, 'hard');
   });
+
+  test('controller loads persisted butterflies content mode', () async {
+    TestWidgetsFlutterBinding.ensureInitialized();
+    SharedPreferences.setMockInitialValues({
+      'animal_style': 'simple',
+      'content_mode': 'butterflies',
+      'style_name': 'Classic',
+      'difficulty': 'hard',
+    });
+
+    final controller = SudokuController();
+    await Future<void>.delayed(Duration.zero);
+
+    expect(controller.state.contentMode, 'butterflies');
+  });
 }

@@ -196,9 +196,19 @@ class SudokuController extends ChangeNotifier {
   }
 
   void onContentModeChanged(String mode) {
-    final next = (mode == 'animals') ? 'animals' : 'numbers';
+    final next = switch (mode) {
+      'animals' => 'animals',
+      'butterflies' => 'butterflies',
+      _ => 'numbers',
+    };
     _settings.setContentMode(next);
-    _render('Mode: ${next == 'animals' ? 'Animals' : 'Numbers'}');
+    _render(
+      'Mode: ${switch (next) {
+        'animals' => 'Animals',
+        'butterflies' => 'Butterflies',
+        _ => 'Numbers',
+      }}',
+    );
   }
 
   void onAnimalStyleChanged(String style) {

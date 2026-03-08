@@ -67,6 +67,13 @@ class _SudokuScreenState extends State<SudokuScreen> {
     }
   }
 
+  String _imageVariantKey(UiState state) {
+    if (state.contentMode == 'butterflies') {
+      return 'butterflies';
+    }
+    return state.animalStyle;
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
@@ -80,7 +87,7 @@ class _SudokuScreenState extends State<SudokuScreen> {
             automaticallyImplyLeading: false,
             title: const Align(
               alignment: Alignment.centerLeft,
-              child: Text('ZooDoKu 0.4.4'),
+              child: Text('ZuDoKu 0.4.4'),
             ),
             actions: [
               Builder(
@@ -116,9 +123,9 @@ class _SudokuScreenState extends State<SudokuScreen> {
                       state: state,
                       style: style,
                       animalImages:
-                          _animalImages[state.animalStyle] ?? const {},
+                          _animalImages[_imageVariantKey(state)] ?? const {},
                       noteImagesBySize:
-                          _noteImages[state.animalStyle] ?? const {},
+                          _noteImages[_imageVariantKey(state)] ?? const {},
                       devicePixelRatio: MediaQuery.of(context).devicePixelRatio,
                       candidateVisible:
                           _candidateController.visible &&
@@ -169,7 +176,7 @@ class _SudokuScreenState extends State<SudokuScreen> {
 
   void _handleCellLongPress(Offset globalPosition, Coord coord) {
     final state = widget.controller.state;
-    if (state.contentMode != 'animals') {
+    if (state.contentMode == 'numbers') {
       return;
     }
     final cell = state.board.cells[coord.row][coord.col];
@@ -177,7 +184,7 @@ class _SudokuScreenState extends State<SudokuScreen> {
     if (value == null) {
       return;
     }
-    final name = AnimalImageCache.nameForDigit(value);
+    final name = AnimalImageCache.displayNameForDigit(state.contentMode, value);
     _tooltipService.show(
       context: context,
       globalPosition: globalPosition,
@@ -198,7 +205,7 @@ class _SudokuScreenState extends State<SudokuScreen> {
     if (cell.notes.isNotEmpty && !state.notesMode) {
       widget.controller.setNotesMode(true);
     }
-    if (state.contentMode == 'animals' && _animalLoad != null) {
+    if (state.contentMode != 'numbers' && _animalLoad != null) {
       await _animalLoad;
     }
     final candidates = _possibleDigits(state, coord);

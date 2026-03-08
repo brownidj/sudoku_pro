@@ -28,19 +28,30 @@ class TopControls extends StatelessWidget {
             children: [
               Align(
                 alignment: Alignment.centerLeft,
-                child: ToggleButtons(
-                  isSelected: [state.contentMode == 'animals', state.contentMode == 'numbers'],
-                  onPressed: (index) {
-                    onContentModeChanged(index == 0 ? 'animals' : 'numbers');
+                child: DropdownButton<String>(
+                  value: switch (state.contentMode) {
+                    'numbers' => 'numbers',
+                    'butterflies' => 'butterflies',
+                    _ => 'animals',
                   },
-                  children: const [
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 12),
+                  onChanged: (value) {
+                    if (value == null) {
+                      return;
+                    }
+                    onContentModeChanged(value);
+                  },
+                  items: const [
+                    DropdownMenuItem<String>(
+                      value: 'animals',
                       child: Text('Animals'),
                     ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 12),
+                    DropdownMenuItem<String>(
+                      value: 'numbers',
                       child: Text('Numbers'),
+                    ),
+                    DropdownMenuItem<String>(
+                      value: 'butterflies',
+                      child: Text('Butterflies'),
                     ),
                   ],
                 ),
@@ -62,8 +73,7 @@ class TopControls extends StatelessWidget {
             crossAxisAlignment: WrapCrossAlignment.center,
             spacing: 12,
             runSpacing: 8,
-            children: [
-            ],
+            children: [],
           ),
         ],
       ),

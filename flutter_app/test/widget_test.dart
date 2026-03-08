@@ -13,6 +13,6 @@ void main() {
   testWidgets('App renders main screen', (WidgetTester tester) async {
     await tester.pumpWidget(const SudokuApp());
     await tester.pumpAndSettle();
-    expect(find.textContaining('ZooDoKu'), findsOneWidget);
+    expect(find.textContaining('ZuDoKu'), findsOneWidget);
   });
 }

@@ -6,7 +6,8 @@ import 'package:flutter_app/ui/animal_cache.dart';
 class CandidatePanel extends StatelessWidget {
   final bool visible;
   final List<int> candidateDigits;
-  final bool showAnimals;
+  final bool showImages;
+  final String contentMode;
   final bool notesMode;
   final Set<int> selectedNotes;
   final Map<int, ui.Image> animalImages;
@@ -17,7 +18,8 @@ class CandidatePanel extends StatelessWidget {
     super.key,
     required this.visible,
     required this.candidateDigits,
-    required this.showAnimals,
+    required this.showImages,
+    required this.contentMode,
     required this.notesMode,
     required this.selectedNotes,
     required this.animalImages,
@@ -46,22 +48,26 @@ class CandidatePanel extends StatelessWidget {
                   width: 44,
                   height: 44,
                   child: GestureDetector(
-                    onLongPressStart: showAnimals
+                    onLongPressStart: showImages
                         ? (_) => tooltipKey.currentState?.ensureTooltipVisible()
                         : null,
-                    onLongPress:
-                        onDigitLongPressed == null ? null : () => onDigitLongPressed!(digit),
+                    onLongPress: onDigitLongPressed == null
+                        ? null
+                        : () => onDigitLongPressed!(digit),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         padding: EdgeInsets.zero,
-                        backgroundColor: notesMode && selectedNotes.contains(digit)
+                        backgroundColor:
+                            notesMode && selectedNotes.contains(digit)
                             ? const Color(0xFFF6BABA)
-                            : (showAnimals ? Colors.white : null),
+                            : (showImages ? Colors.white : null),
                       ),
                       onPressed: () => onDigitSelected(digit),
-                      child: showAnimals
+                      child: showImages
                           ? _animalOption(digit, tooltipKey)
-                          : (digit == 0 ? const Icon(Icons.clear) : Text('$digit')),
+                          : (digit == 0
+                                ? const Icon(Icons.clear)
+                                : Text('$digit')),
                     ),
                   ),
                 );
@@ -80,7 +86,7 @@ class CandidatePanel extends StatelessWidget {
     if (image == null) {
       return Text('$digit');
     }
-    final name = AnimalImageCache.nameForDigit(digit);
+    final name = AnimalImageCache.displayNameForDigit(contentMode, digit);
     return Tooltip(
       key: tooltipKey,
       message: name,

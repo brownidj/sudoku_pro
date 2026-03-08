@@ -26,19 +26,24 @@ class SettingsController {
     if (prefs.animalStyle == 'cute' || prefs.animalStyle == 'simple') {
       next = next.copyWith(animalStyle: prefs.animalStyle);
     }
-    if (prefs.contentMode == 'animals' || prefs.contentMode == 'numbers') {
+    if (prefs.contentMode == 'animals' ||
+        prefs.contentMode == 'butterflies' ||
+        prefs.contentMode == 'numbers') {
       next = next.copyWith(contentMode: prefs.contentMode);
     }
     if (prefs.styleName != null && prefs.styleName!.isNotEmpty) {
       next = next.copyWith(styleName: prefs.styleName);
     }
-    if (prefs.difficulty != null && ['easy', 'medium', 'hard'].contains(prefs.difficulty)) {
+    if (prefs.difficulty != null &&
+        ['easy', 'medium', 'hard'].contains(prefs.difficulty)) {
       next = next.copyWith(difficulty: prefs.difficulty);
     }
     if (prefs.puzzleMode == 'unique' || prefs.puzzleMode == 'multi') {
       next = next.copyWith(puzzleMode: prefs.puzzleMode);
     } else {
-      next = next.copyWith(puzzleMode: _defaultPuzzleModeForDifficulty(next.difficulty));
+      next = next.copyWith(
+        puzzleMode: _defaultPuzzleModeForDifficulty(next.difficulty),
+      );
     }
     if (next.difficulty == 'hard' && next.puzzleMode != 'unique') {
       next = next.copyWith(puzzleMode: 'unique');
