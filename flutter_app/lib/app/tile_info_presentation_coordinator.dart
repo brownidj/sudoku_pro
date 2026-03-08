@@ -26,6 +26,12 @@ class ButterflyDialogPresentation extends TileInfoPresentation {
   });
 }
 
+class ImageDialogPresentation extends TileInfoPresentation {
+  final int digit;
+
+  const ImageDialogPresentation({required this.digit});
+}
+
 class TileInfoPresentationCoordinator {
   const TileInfoPresentationCoordinator();
 
@@ -34,7 +40,7 @@ class TileInfoPresentationCoordinator {
     required Coord coord,
     required Map<int, String> butterflyDescriptions,
   }) {
-    if (state.contentMode == 'numbers') {
+    if (state.contentMode == 'numbers' || state.contentMode == 'japanese') {
       return const NoTileInfoPresentation();
     }
 
@@ -47,9 +53,12 @@ class TileInfoPresentationCoordinator {
     if (state.contentMode == 'butterflies') {
       return ButterflyDialogPresentation(
         digit: value,
-        description:
-            butterflyDescriptions[value] ?? 'Description unavailable.',
+        description: butterflyDescriptions[value] ?? 'Description unavailable.',
       );
+    }
+
+    if (state.contentMode == 'ocean') {
+      return ImageDialogPresentation(digit: value);
     }
 
     return TooltipTileInfoPresentation(

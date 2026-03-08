@@ -2,6 +2,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_app/ui/animal_cache.dart';
+import 'package:flutter_app/ui/services/japanese_kanji_service.dart';
 
 class CandidatePanel extends StatelessWidget {
   final bool visible;
@@ -11,6 +12,7 @@ class CandidatePanel extends StatelessWidget {
   final bool notesMode;
   final Set<int> selectedNotes;
   final Map<int, ui.Image> animalImages;
+  final Map<int, JapaneseKanjiEntry> japaneseKanjiEntries;
   final ValueChanged<int> onDigitSelected;
   final ValueChanged<int>? onDigitLongPressed;
 
@@ -23,6 +25,7 @@ class CandidatePanel extends StatelessWidget {
     required this.notesMode,
     required this.selectedNotes,
     required this.animalImages,
+    required this.japaneseKanjiEntries,
     required this.onDigitSelected,
     this.onDigitLongPressed,
   });
@@ -65,9 +68,7 @@ class CandidatePanel extends StatelessWidget {
                       onPressed: () => onDigitSelected(digit),
                       child: showImages
                           ? _animalOption(digit, tooltipKey)
-                          : (digit == 0
-                                ? const Icon(Icons.clear)
-                                : Text('$digit')),
+                          : _textOption(digit),
                     ),
                   ),
                 );
@@ -76,6 +77,22 @@ class CandidatePanel extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget _textOption(int digit) {
+    if (digit == 0) {
+      return const Icon(Icons.clear);
+    }
+    if (contentMode == 'japanese') {
+      final kanji = japaneseKanjiEntries[digit]?.kanji;
+      if (kanji != null && kanji.isNotEmpty) {
+        return Text(
+          kanji,
+          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
+        );
+      }
+    }
+    return Text('$digit');
   }
 
   Widget _animalOption(int digit, GlobalKey<TooltipState> tooltipKey) {

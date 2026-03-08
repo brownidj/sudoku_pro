@@ -2,7 +2,19 @@ from pathlib import Path
 import base64
 import argparse
 from typing import Literal
-from openai import OpenAI
+import sys
+
+try:
+    from openai import OpenAI
+except ModuleNotFoundError:
+    print(
+        "Missing dependency: openai\n"
+        "Install project dependencies with:\n"
+        "  /Users/david/PycharmProjects/Sudoku_02/.venv/bin/python -m pip install -r "
+        "/Users/david/PycharmProjects/Sudoku_02/requirements.txt",
+        file=sys.stderr,
+    )
+    raise SystemExit(1)
 
 # ---------------- Configuration ----------------
 

@@ -28,6 +28,8 @@ class SettingsController {
     }
     if (prefs.contentMode == 'animals' ||
         prefs.contentMode == 'butterflies' ||
+        prefs.contentMode == 'ocean' ||
+        prefs.contentMode == 'japanese' ||
         prefs.contentMode == 'numbers') {
       next = next.copyWith(contentMode: prefs.contentMode);
     }
@@ -85,8 +87,16 @@ class SettingsController {
   }
 
   void setContentMode(String mode) {
-    _setState(_state.copyWith(contentMode: mode));
-    _prefs.saveContentMode(mode);
+    final next = switch (mode) {
+      'animals' => 'animals',
+      'butterflies' => 'butterflies',
+      'ocean' => 'ocean',
+      'japanese' => 'japanese',
+      'numbers' => 'numbers',
+      _ => _state.contentMode,
+    };
+    _setState(_state.copyWith(contentMode: next));
+    _prefs.saveContentMode(next);
   }
 
   void setAnimalStyle(String style) {

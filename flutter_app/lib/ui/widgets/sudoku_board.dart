@@ -6,6 +6,7 @@ import 'package:flutter_app/app/ui_state.dart';
 import 'package:flutter_app/domain/types.dart';
 import 'package:flutter_app/ui/board_layout.dart';
 import 'package:flutter_app/ui/board_painter.dart';
+import 'package:flutter_app/ui/services/japanese_kanji_service.dart';
 import 'package:flutter_app/ui/styles.dart';
 
 class SudokuBoard extends StatelessWidget {
@@ -13,6 +14,7 @@ class SudokuBoard extends StatelessWidget {
   final BoardStyle style;
   final Map<int, ui.Image> animalImages;
   final Map<int, Map<int, ui.Image>> noteImagesBySize;
+  final Map<int, JapaneseKanjiEntry> japaneseKanjiEntries;
   final double devicePixelRatio;
   final ValueChanged<Coord> onTapCell;
   final void Function(Offset, Coord) onLongPressCell;
@@ -23,6 +25,7 @@ class SudokuBoard extends StatelessWidget {
     required this.style,
     required this.animalImages,
     required this.noteImagesBySize,
+    required this.japaneseKanjiEntries,
     required this.devicePixelRatio,
     required this.onTapCell,
     required this.onLongPressCell,
@@ -61,6 +64,7 @@ class SudokuBoard extends StatelessWidget {
                   style: style,
                   animalImages: animalImages,
                   noteImagesBySize: noteImagesBySize,
+                  japaneseKanjiEntries: japaneseKanjiEntries,
                   devicePixelRatio: devicePixelRatio,
                 ),
               ),

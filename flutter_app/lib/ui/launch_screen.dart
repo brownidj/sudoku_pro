@@ -106,11 +106,23 @@ class _LaunchScreenState extends State<LaunchScreen> {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 24),
+                if (!_ready) ...[
+                  const CircularProgressIndicator(),
+                  const SizedBox(height: 12),
+                  Text(
+                    'Please wait...',
+                    style: theme.textTheme.bodyMedium,
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 24),
+                ],
                 if (!widget.controller.hadSavedSessionAtLaunch)
                   SizedBox(
                     height: 44,
                     child: ElevatedButton(
-                      onPressed: () => _openGame(startNewGame: false),
+                      onPressed: _ready
+                          ? () => _openGame(startNewGame: false)
+                          : null,
                       child: const Text('Play'),
                     ),
                   )
@@ -121,7 +133,9 @@ class _LaunchScreenState extends State<LaunchScreen> {
                       SizedBox(
                         height: 44,
                         child: ElevatedButton(
-                          onPressed: () => _openGame(startNewGame: false),
+                          onPressed: _ready
+                              ? () => _openGame(startNewGame: false)
+                              : null,
                           child: const Text('Resume'),
                         ),
                       ),
@@ -129,7 +143,9 @@ class _LaunchScreenState extends State<LaunchScreen> {
                       SizedBox(
                         height: 44,
                         child: OutlinedButton(
-                          onPressed: () => _openGame(startNewGame: true),
+                          onPressed: _ready
+                              ? () => _openGame(startNewGame: true)
+                              : null,
                           child: const Text('New game'),
                         ),
                       ),

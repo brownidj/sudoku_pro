@@ -116,11 +116,14 @@ class _SudokuScreenState extends State<SudokuScreen> {
                       style: style,
                       animalImages: _animalAssets.imagesFor(state),
                       noteImagesBySize: _animalAssets.noteImagesFor(state),
+                      japaneseKanjiEntries: _animalAssets
+                          .japaneseKanjiEntries(),
                       devicePixelRatio: MediaQuery.of(context).devicePixelRatio,
                       candidateVisible: state.candidateVisible,
                       candidateDigits: state.candidateDigits,
                       selectedNotes: state.candidateSelectedNotes,
-                      onDigitSelected: widget.controller.onCandidateDigitPressed,
+                      onDigitSelected:
+                          widget.controller.onCandidateDigitPressed,
                       onDigitLongPressed: state.notesMode
                           ? widget.controller.onCandidateDigitLongPressed
                           : null,
@@ -155,7 +158,7 @@ class _SudokuScreenState extends State<SudokuScreen> {
       context: context,
       globalPosition: globalPosition,
       presentation: presentation,
-      butterflyImages: _animalAssets.butterflyImages(),
+      images: _animalAssets.imagesFor(state),
     );
   }
 
@@ -168,7 +171,11 @@ class _SudokuScreenState extends State<SudokuScreen> {
     if (cell.given) {
       return;
     }
-    if (state.contentMode != 'numbers') {
+    final usesImages =
+        state.contentMode == 'animals' ||
+        state.contentMode == 'butterflies' ||
+        state.contentMode == 'ocean';
+    if (usesImages) {
       await _animalAssets.ensureLoaded();
     }
     if (!mounted) {

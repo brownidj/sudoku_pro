@@ -17,6 +17,7 @@ void main() {
             notesMode: false,
             selectedNotes: const {},
             animalImages: const {},
+            japaneseKanjiEntries: const {},
             onDigitSelected: (_) {},
           ),
         ),

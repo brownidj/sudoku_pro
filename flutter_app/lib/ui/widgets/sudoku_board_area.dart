@@ -7,6 +7,7 @@ import 'package:flutter_app/app/ui_state.dart';
 import 'package:flutter_app/domain/types.dart';
 import 'package:flutter_app/ui/widgets/candidate_panel.dart';
 import 'package:flutter_app/ui/widgets/sudoku_board.dart';
+import 'package:flutter_app/ui/services/japanese_kanji_service.dart';
 import 'package:flutter_app/ui/styles.dart';
 
 class SudokuBoardArea extends StatelessWidget {
@@ -14,6 +15,7 @@ class SudokuBoardArea extends StatelessWidget {
   final BoardStyle style;
   final Map<int, ui.Image> animalImages;
   final Map<int, Map<int, ui.Image>> noteImagesBySize;
+  final Map<int, JapaneseKanjiEntry> japaneseKanjiEntries;
   final double devicePixelRatio;
   final bool candidateVisible;
   final List<int> candidateDigits;
@@ -29,6 +31,7 @@ class SudokuBoardArea extends StatelessWidget {
     required this.style,
     required this.animalImages,
     required this.noteImagesBySize,
+    required this.japaneseKanjiEntries,
     required this.devicePixelRatio,
     required this.candidateVisible,
     required this.candidateDigits,
@@ -72,6 +75,7 @@ class SudokuBoardArea extends StatelessWidget {
                 style: style,
                 animalImages: animalImages,
                 noteImagesBySize: noteImagesBySize,
+                japaneseKanjiEntries: japaneseKanjiEntries,
                 devicePixelRatio: devicePixelRatio,
                 onTapCell: onTapCell,
                 onLongPressCell: onLongPressCell,
@@ -110,11 +114,15 @@ class SudokuBoardArea extends StatelessWidget {
             CandidatePanel(
               visible: candidateVisible,
               candidateDigits: candidateDigits,
-              showImages: state.contentMode != 'numbers',
+              showImages:
+                  state.contentMode == 'animals' ||
+                  state.contentMode == 'butterflies' ||
+                  state.contentMode == 'ocean',
               contentMode: state.contentMode,
               notesMode: state.notesMode,
               selectedNotes: selectedNotes,
               animalImages: animalImages,
+              japaneseKanjiEntries: japaneseKanjiEntries,
               onDigitSelected: onDigitSelected,
               onDigitLongPressed: onDigitLongPressed,
             ),

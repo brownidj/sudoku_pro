@@ -27,7 +27,10 @@ extension SudokuControllerSettingsCommands on SudokuController {
     final next = switch (mode) {
       'animals' => 'animals',
       'butterflies' => 'butterflies',
-      _ => 'numbers',
+      'ocean' => 'ocean',
+      'japanese' => 'japanese',
+      'numbers' => 'numbers',
+      _ => _settings.state.contentMode,
     };
     _settings.setContentMode(next);
     _saveGameSession();
@@ -35,7 +38,10 @@ extension SudokuControllerSettingsCommands on SudokuController {
       'Mode: ${switch (next) {
         'animals' => 'Animals',
         'butterflies' => 'Butterflies',
-        _ => 'Numbers',
+        'ocean' => 'Ocean',
+        'japanese' => 'Japanese',
+        'numbers' => 'Numbers',
+        _ => next,
       }}',
     );
   }

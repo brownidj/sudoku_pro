@@ -5,6 +5,7 @@ import 'package:flutter_app/app/ui_state.dart';
 import 'package:flutter_app/ui/board_layout.dart';
 import 'package:flutter_app/ui/board_theme.dart';
 import 'package:flutter_app/ui/note_layout.dart';
+import 'package:flutter_app/ui/services/japanese_kanji_service.dart';
 import 'package:flutter_app/ui/styles.dart';
 
 class SudokuBoardPainter extends CustomPainter {
@@ -12,6 +13,7 @@ class SudokuBoardPainter extends CustomPainter {
   final BoardStyle style;
   final Map<int, ui.Image> animalImages;
   final Map<int, Map<int, ui.Image>> noteImagesBySize;
+  final Map<int, JapaneseKanjiEntry> japaneseKanjiEntries;
   final double devicePixelRatio;
 
   SudokuBoardPainter({
@@ -19,6 +21,7 @@ class SudokuBoardPainter extends CustomPainter {
     required this.style,
     required this.animalImages,
     required this.noteImagesBySize,
+    required this.japaneseKanjiEntries,
     required this.devicePixelRatio,
   });
 
@@ -40,6 +43,7 @@ class SudokuBoardPainter extends CustomPainter {
       style: style,
       animalImages: animalImages,
       noteImagesBySize: noteImagesBySize,
+      japaneseKanjiEntries: japaneseKanjiEntries,
       devicePixelRatio: devicePixelRatio,
     ).paint(canvas, layout, BoardTheme(style));
     _BoardGridPainter(style: style).paint(canvas, layout);
@@ -53,7 +57,8 @@ class SudokuBoardPainter extends CustomPainter {
     return oldDelegate.state != state ||
         oldDelegate.style != style ||
         oldDelegate.animalImages != animalImages ||
-        oldDelegate.noteImagesBySize != noteImagesBySize;
+        oldDelegate.noteImagesBySize != noteImagesBySize ||
+        oldDelegate.japaneseKanjiEntries != japaneseKanjiEntries;
   }
 }
 
@@ -62,6 +67,7 @@ class _BoardCellsPainter {
   final BoardStyle style;
   final Map<int, ui.Image> animalImages;
   final Map<int, Map<int, ui.Image>> noteImagesBySize;
+  final Map<int, JapaneseKanjiEntry> japaneseKanjiEntries;
   final double devicePixelRatio;
 
   const _BoardCellsPainter({
@@ -69,6 +75,7 @@ class _BoardCellsPainter {
     required this.style,
     required this.animalImages,
     required this.noteImagesBySize,
+    required this.japaneseKanjiEntries,
     required this.devicePixelRatio,
   });
 
@@ -84,6 +91,7 @@ class _BoardCellsPainter {
       style: style,
       animalImages: animalImages,
       noteImagesBySize: noteImagesBySize,
+      japaneseKanjiEntries: japaneseKanjiEntries,
       devicePixelRatio: devicePixelRatio,
     );
 
@@ -112,8 +120,7 @@ class _BoardCellsPainter {
 
         final hasImageValue =
             cell.value != null && animalImages.containsKey(cell.value);
-        final background =
-            state.contentMode == 'butterflies' && hasImageValue
+        final background = state.contentMode == 'butterflies' && hasImageValue
             ? Colors.white
             : model.background;
         canvas.drawRect(rect, Paint()..color = background);
@@ -161,6 +168,7 @@ class _BoardContentPainter {
   final BoardStyle style;
   final Map<int, ui.Image> animalImages;
   final Map<int, Map<int, ui.Image>> noteImagesBySize;
+  final Map<int, JapaneseKanjiEntry> japaneseKanjiEntries;
   final double devicePixelRatio;
 
   const _BoardContentPainter({
@@ -168,6 +176,7 @@ class _BoardContentPainter {
     required this.style,
     required this.animalImages,
     required this.noteImagesBySize,
+    required this.japaneseKanjiEntries,
     required this.devicePixelRatio,
   });
 
@@ -175,6 +184,8 @@ class _BoardContentPainter {
     if (cell.value != null) {
       if (state.contentMode == 'numbers') {
         _drawValue(canvas, rect, cell.value!, cell.given, cellSize);
+      } else if (state.contentMode == 'japanese') {
+        _drawJapaneseValue(canvas, rect, cell.value!, cell.given, cellSize);
       } else if (animalImages.containsKey(cell.value)) {
         _drawAnimal(canvas, rect, animalImages[cell.value]!, cellSize);
       }
@@ -185,9 +196,40 @@ class _BoardContentPainter {
         state: state,
         style: style,
         noteImagesBySize: noteImagesBySize,
+        japaneseKanjiEntries: japaneseKanjiEntries,
         devicePixelRatio: devicePixelRatio,
       ).paint(canvas, rect, cell.notes);
     }
+  }
+
+  void _drawJapaneseValue(
+    Canvas canvas,
+    Rect rect,
+    int value,
+    bool given,
+    double cellSize,
+  ) {
+    final kanji = japaneseKanjiEntries[value]?.kanji ?? value.toString();
+    final textPainter = TextPainter(
+      text: TextSpan(
+        text: kanji,
+        style: TextStyle(
+          color: given ? style.givenColor : style.valueColor,
+          fontWeight: FontWeight.w700,
+          fontSize: cellSize * 0.72,
+        ),
+      ),
+      textAlign: TextAlign.center,
+      textDirection: TextDirection.ltr,
+    )..layout(minWidth: 0, maxWidth: rect.width);
+
+    textPainter.paint(
+      canvas,
+      Offset(
+        rect.left + (rect.width - textPainter.width) / 2,
+        rect.top + (rect.height - textPainter.height) / 2,
+      ),
+    );
   }
 
   void _drawValue(
@@ -221,7 +263,8 @@ class _BoardContentPainter {
   }
 
   void _drawAnimal(Canvas canvas, Rect rect, ui.Image image, double cellSize) {
-    final targetSize = state.contentMode == 'butterflies'
+    final targetSize =
+        state.contentMode == 'butterflies' || state.contentMode == 'ocean'
         ? cellSize * 0.9
         : cellSize * 0.7;
     final target = Rect.fromLTWH(
@@ -238,12 +281,14 @@ class _BoardNotesPainter {
   final UiState state;
   final BoardStyle style;
   final Map<int, Map<int, ui.Image>> noteImagesBySize;
+  final Map<int, JapaneseKanjiEntry> japaneseKanjiEntries;
   final double devicePixelRatio;
 
   const _BoardNotesPainter({
     required this.state,
     required this.style,
     required this.noteImagesBySize,
+    required this.japaneseKanjiEntries,
     required this.devicePixelRatio,
   });
 
@@ -254,7 +299,7 @@ class _BoardNotesPainter {
     }
     final gridSize = noteGridSize(notesSorted.length);
     final subCellSize = rect.width / gridSize;
-    if (state.contentMode == 'numbers') {
+    if (state.contentMode == 'numbers' || state.contentMode == 'japanese') {
       _drawNumberNotes(canvas, rect, notesSorted, gridSize, subCellSize);
       return;
     }
@@ -290,7 +335,12 @@ class _BoardNotesPainter {
         logicalSize,
         logicalSize,
       );
-      paintImage(canvas: canvas, rect: target, image: image, fit: BoxFit.contain);
+      paintImage(
+        canvas: canvas,
+        rect: target,
+        image: image,
+        fit: BoxFit.contain,
+      );
     }
   }
 
@@ -319,9 +369,12 @@ class _BoardNotesPainter {
 
   void _drawNoteDigit(Canvas canvas, Rect rect, int digit) {
     final fontSize = rect.width * 0.6;
+    final text = state.contentMode == 'japanese'
+        ? (japaneseKanjiEntries[digit]?.kanji ?? digit.toString())
+        : digit.toString();
     final textPainter = TextPainter(
       text: TextSpan(
-        text: digit.toString(),
+        text: text,
         style: TextStyle(
           color: style.valueColor.withValues(alpha: 0.7),
           fontWeight: FontWeight.w500,

@@ -7,9 +7,8 @@ import 'package:flutter_app/ui/services/tooltip_overlay_service.dart';
 class TileInfoPresentationService {
   final TooltipOverlayService _tooltipService;
 
-  TileInfoPresentationService({
-    TooltipOverlayService? tooltipService,
-  }) : _tooltipService = tooltipService ?? TooltipOverlayService();
+  TileInfoPresentationService({TooltipOverlayService? tooltipService})
+    : _tooltipService = tooltipService ?? TooltipOverlayService();
 
   void dispose() {
     _tooltipService.dispose();
@@ -19,10 +18,10 @@ class TileInfoPresentationService {
     required BuildContext context,
     required Offset globalPosition,
     required TileInfoPresentation presentation,
-    required Map<int, ui.Image> butterflyImages,
+    required Map<int, ui.Image> images,
   }) {
     if (presentation is ButterflyDialogPresentation) {
-      final image = butterflyImages[presentation.digit];
+      final image = images[presentation.digit];
       showDialog<void>(
         context: context,
         builder: (context) => AlertDialog(
@@ -50,6 +49,26 @@ class TileInfoPresentationService {
                 ),
               ],
             ),
+          ),
+        ),
+      );
+      return;
+    }
+
+    if (presentation is ImageDialogPresentation) {
+      final image = images[presentation.digit];
+      showDialog<void>(
+        context: context,
+        builder: (context) => AlertDialog(
+          content: SizedBox(
+            width: 240,
+            height: 240,
+            child: image == null
+                ? const SizedBox.shrink()
+                : FittedBox(
+                    fit: BoxFit.contain,
+                    child: RawImage(image: image),
+                  ),
           ),
         ),
       );
