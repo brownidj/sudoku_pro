@@ -107,7 +107,11 @@ class _LaunchScreenState extends State<LaunchScreen> {
                 ),
                 const SizedBox(height: 24),
                 if (!_ready) ...[
-                  const CircularProgressIndicator(),
+                  Icon(
+                    Icons.hourglass_top_rounded,
+                    size: 28,
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.75),
+                  ),
                   const SizedBox(height: 12),
                   Text(
                     'Please wait...',

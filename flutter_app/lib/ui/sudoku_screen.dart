@@ -58,13 +58,16 @@ class _SudokuScreenState extends State<SudokuScreen> {
         final waitingForAssets = _animalAssets.isWaitingFor(state);
 
         if (waitingForAssets) {
-          return const Scaffold(
+          return Scaffold(
             body: SafeArea(
               child: Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    CircularProgressIndicator(),
+                    Icon(
+                      Icons.hourglass_top_rounded,
+                      size: 28,
+                    ),
                     SizedBox(height: 12),
                     Text('Please wait...'),
                   ],
