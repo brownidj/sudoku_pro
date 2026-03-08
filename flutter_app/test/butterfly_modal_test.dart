@@ -25,7 +25,21 @@ class FakeAnimalAssetService extends AnimalAssetService {
 
   @override
   Future<AnimalAssetBundle> load() async {
-    return const AnimalAssetBundle(animalImages: {'butterflies': {}}, noteImages: {});
+    return const AnimalAssetBundle(
+      animalImages: {'butterflies': {}},
+      noteImages: {},
+      butterflyDescriptions: {
+        1: 'The Monarch butterfly test description found in North America.',
+        2: 'The Swallowtail butterfly test description found in Europe and Asia.',
+        3: 'The Blue Morpho butterfly test description found in South America.',
+        4: 'The Glasswing butterfly test description found in Central America.',
+        5: 'The Peacock butterfly test description found in Europe.',
+        6: 'The Zebra Longwing butterfly test description found in the Americas.',
+        7: 'The Sulphur butterfly test description found across the Americas.',
+        8: 'The Leaf butterfly test description found in Asia.',
+        9: 'The Metalmark butterfly test description found in the Americas.',
+      },
+    );
   }
 }
 

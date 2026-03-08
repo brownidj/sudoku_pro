@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 class Coord {
   final int row;
   final int col;

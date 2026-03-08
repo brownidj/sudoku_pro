@@ -43,22 +43,35 @@ This layered approach makes the app maintainable and reduces cross‑cutting con
 
 ### Controllers
 - **`SudokuController`**
-  - The orchestration hub for gameplay.
-  - Holds `History`, selection, conflicts, solution grids.
+  - Thin app-layer facade for UI event entry points.
+  - Delegates game flow, board edits, and candidate panel state to coordinators.
   - Builds `UiState` for UI consumption.
   - Dependencies injectable for testability.
 - **`SettingsController`**
   - Manages content mode (animals/numbers), style, difficulty, and notes mode.
   - Persists to `PreferencesStore`.
 
+### Coordinators
+- **`GameFlowCoordinator`**
+  - Owns restore/start/check/show-solution transitions.
+  - Produces updated gameplay session state plus unlock/status outcomes.
+- **`BoardEditCoordinator`**
+  - Owns place/toggle/clear edit decisions and first-move lock intent.
+- **`CandidatePanelCoordinator`**
+  - Owns candidate-panel visibility, digits, and selected-note state.
+
 ### State Models
 - **`UiState` (lib/app/ui_state.dart)**  
   Immutable state snapshot for UI.
 - **`SettingsState`**  
   Persistent user settings.
+- **`GameplaySessionState`**
+  - Immutable gameplay/session state for board history, selection, conflicts, and end-game markers.
+- **`CandidatePanelState`**
+  - Immutable candidate-panel state consumed by UI widgets.
 
 ### Maintainability Notes
-- `SudokuController` remains the largest class but now isolated from UI widget logic.
+- `SudokuController` remains the largest class but now mostly composes smaller app-layer units.
 - Injection makes unit tests feasible without heavy setup.
 
 ---
@@ -70,7 +83,7 @@ This layered approach makes the app maintainable and reduces cross‑cutting con
 - **`SudokuScreen`**
   - Main game screen.
   - Coordinates controller + UI widgets.
-  - Handles candidate panel lifecycle (via `CandidateSelectionController`).
+  - Handles asset loading and forwards gestures to app-layer commands.
 
 - **Extracted Widgets**
   - `TopControls`, `ActionBar`, `Legend`
@@ -149,18 +162,19 @@ This layered approach makes the app maintainable and reduces cross‑cutting con
 ---
 
 ## 9. Remaining Pressure Points
-- `SudokuController` still aggregates many responsibilities (selection, history, game flow).
-- `SudokuScreen` retains candidate panel orchestration and tooltip overlays.
+- `SudokuController` still exposes a broad command surface even though state ownership is cleaner.
+- `SudokuScreen` still owns tooltip/modal presentation and asset-loading orchestration.
 
 These are manageable now, but should be the first refactor targets if complexity grows.
 
 ---
 
 ## 10. Suggested Future Refactors (Optional)
-- Extract a **CandidateSelectionService** into app/state layer.
-- Further split `SudokuController` into:
-  - `GameController` (history, check/solution)
-  - `UiController` (selection + note display logic)
+- Extract presentation decisions from `SudokuScreen` into an app-layer interaction coordinator.
+- Further split `SudokuController` command handling into:
+  - gameplay/session commands
+  - settings/display commands
+  - board interaction commands
 
 ---
 

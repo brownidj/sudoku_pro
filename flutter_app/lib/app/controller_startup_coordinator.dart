@@ -1,3 +1,4 @@
+import 'package:flutter_app/app/game_session_models.dart';
 import 'package:flutter_app/app/game_session_service.dart';
 import 'package:flutter_app/app/settings_controller.dart';
 

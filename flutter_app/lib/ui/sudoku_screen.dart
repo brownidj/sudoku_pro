@@ -1,13 +1,12 @@
-import 'dart:ui' as ui;
-
 import 'package:flutter/material.dart';
+import 'package:flutter_app/app/app_info.dart';
 import 'package:flutter_app/app/sudoku_controller.dart';
+import 'package:flutter_app/app/tile_info_presentation_coordinator.dart';
 import 'package:flutter_app/app/ui_state.dart';
 import 'package:flutter_app/domain/types.dart';
-import 'package:flutter_app/ui/animal_cache.dart';
-import 'package:flutter_app/ui/candidate_selection_controller.dart';
 import 'package:flutter_app/ui/services/animal_asset_service.dart';
-import 'package:flutter_app/ui/services/tooltip_overlay_service.dart';
+import 'package:flutter_app/ui/services/animal_assets_controller.dart';
+import 'package:flutter_app/ui/services/tile_info_presentation_service.dart';
 import 'package:flutter_app/ui/styles.dart';
 import 'package:flutter_app/ui/widgets/action_bar.dart';
 import 'package:flutter_app/ui/widgets/legend.dart';
@@ -30,81 +29,33 @@ class SudokuScreen extends StatefulWidget {
 }
 
 class _SudokuScreenState extends State<SudokuScreen> {
-  final Map<String, Map<int, ui.Image>> _animalImages = {};
-  final Map<String, Map<int, Map<int, ui.Image>>> _noteImages = {};
-  final Map<int, String> _butterflyDescriptions = {};
-  final TooltipOverlayService _tooltipService = TooltipOverlayService();
-  Future<void>? _animalLoad;
-  bool _animalAssetsReady = false;
-  late final CandidateSelectionController _candidateController;
+  final TileInfoPresentationCoordinator _tileInfoCoordinator =
+      const TileInfoPresentationCoordinator();
+  late final AnimalAssetsController _animalAssets;
+  late final TileInfoPresentationService _tileInfoPresenter;
 
   @override
   void initState() {
     super.initState();
-    _animalLoad = _loadAnimalImages();
-    _candidateController = CandidateSelectionController()
-      ..addListener(_onCandidateChanged);
+    _animalAssets = AnimalAssetsController(widget.animalAssetService);
+    _tileInfoPresenter = TileInfoPresentationService();
+    _animalAssets.startLoading();
   }
 
   @override
   void dispose() {
-    _candidateController.removeListener(_onCandidateChanged);
-    _candidateController.dispose();
-    _tooltipService.dispose();
+    _tileInfoPresenter.dispose();
     super.dispose();
-  }
-
-  void _onCandidateChanged() {
-    if (mounted) {
-      setState(() {});
-    }
-  }
-
-  Future<void> _loadAnimalImages() async {
-    try {
-      final bundle = await widget.animalAssetService.load();
-      _animalImages
-        ..clear()
-        ..addAll(bundle.animalImages);
-      _noteImages
-        ..clear()
-        ..addAll(bundle.noteImages);
-      try {
-        final descriptions = await AnimalImageCache.loadButterflyDescriptions();
-        _butterflyDescriptions
-          ..clear()
-          ..addAll(descriptions);
-      } catch (_) {
-        _butterflyDescriptions.clear();
-      }
-    } catch (_) {
-      _animalImages.clear();
-      _noteImages.clear();
-      _butterflyDescriptions.clear();
-    } finally {
-      _animalAssetsReady = true;
-    }
-    if (mounted) {
-      setState(() {});
-    }
-  }
-
-  String _imageVariantKey(UiState state) {
-    if (state.contentMode == 'butterflies') {
-      return 'butterflies';
-    }
-    return state.animalStyle;
   }
 
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: widget.controller,
+      animation: Listenable.merge([widget.controller, _animalAssets]),
       builder: (context, _) {
         final state = widget.controller.state;
         final style = styleForName(state.styleName);
-        final waitingForAssets =
-            state.contentMode != 'numbers' && !_animalAssetsReady;
+        final waitingForAssets = _animalAssets.isWaitingFor(state);
 
         if (waitingForAssets) {
           return const Scaffold(
@@ -128,7 +79,7 @@ class _SudokuScreenState extends State<SudokuScreen> {
             automaticallyImplyLeading: false,
             title: const Align(
               alignment: Alignment.centerLeft,
-              child: Text('ZuDoKu Pro 0.1.0'),
+              child: Text(AppInfo.launchTitle),
             ),
             actions: [
               Builder(
@@ -163,37 +114,15 @@ class _SudokuScreenState extends State<SudokuScreen> {
                     child: SudokuBoardArea(
                       state: state,
                       style: style,
-                      animalImages:
-                          _animalImages[_imageVariantKey(state)] ?? const {},
-                      noteImagesBySize:
-                          _noteImages[_imageVariantKey(state)] ?? const {},
+                      animalImages: _animalAssets.imagesFor(state),
+                      noteImagesBySize: _animalAssets.noteImagesFor(state),
                       devicePixelRatio: MediaQuery.of(context).devicePixelRatio,
-                      candidateVisible:
-                          _candidateController.visible &&
-                          _candidateController.candidateCoord != null &&
-                          !state.gameOver,
-                      candidateDigits: _candidateController.candidateDigits,
-                      selectedNotes: _selectedNotes(state),
-                      onDigitSelected: (digit) {
-                        if (digit == 0) {
-                          widget.controller.onClearPressed();
-                        } else {
-                          widget.controller.onDigitPressed(digit);
-                        }
-                        if (!state.notesMode || digit == 0) {
-                          _candidateController.hide();
-                        } else {
-                          _candidateController.refresh();
-                        }
-                      },
+                      candidateVisible: state.candidateVisible,
+                      candidateDigits: state.candidateDigits,
+                      selectedNotes: state.candidateSelectedNotes,
+                      onDigitSelected: widget.controller.onCandidateDigitPressed,
                       onDigitLongPressed: state.notesMode
-                          ? (digit) {
-                              if (digit == 0) {
-                                return;
-                              }
-                              widget.controller.onPlaceDigit(digit);
-                              _candidateController.hide();
-                            }
+                          ? widget.controller.onCandidateDigitLongPressed
                           : null,
                       onTapCell: _handleCellTap,
                       onLongPressCell: _handleCellLongPress,
@@ -217,57 +146,20 @@ class _SudokuScreenState extends State<SudokuScreen> {
 
   void _handleCellLongPress(Offset globalPosition, Coord coord) {
     final state = widget.controller.state;
-    if (state.contentMode == 'numbers') {
-      return;
-    }
-    final cell = state.board.cells[coord.row][coord.col];
-    final value = cell.value;
-    if (value == null) {
-      return;
-    }
-    if (state.contentMode == 'butterflies') {
-      final image = _animalImages['butterflies']?[value];
-      final description =
-          _butterflyDescriptions[value] ?? 'Description unavailable.';
-      showDialog<void>(
-        context: context,
-        builder: (context) => AlertDialog(
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(
-                  width: 240,
-                  height: 240,
-                  child: image == null
-                      ? const SizedBox.shrink()
-                      : FittedBox(
-                          fit: BoxFit.contain,
-                          child: RawImage(image: image),
-                        ),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  description,
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-      return;
-    }
-    final name = AnimalImageCache.displayNameForDigit(state.contentMode, value);
-    _tooltipService.show(
+    final presentation = _tileInfoCoordinator.forLongPress(
+      state: state,
+      coord: coord,
+      butterflyDescriptions: _animalAssets.state.butterflyDescriptions,
+    );
+    _tileInfoPresenter.present(
       context: context,
       globalPosition: globalPosition,
-      text: name,
+      presentation: presentation,
+      butterflyImages: _animalAssets.butterflyImages(),
     );
   }
 
   Future<void> _handleCellTap(Coord coord) async {
-    widget.controller.onCellTapped(coord);
     final state = widget.controller.state;
     if (state.gameOver) {
       return;
@@ -276,55 +168,20 @@ class _SudokuScreenState extends State<SudokuScreen> {
     if (cell.given) {
       return;
     }
-    if (cell.notes.isNotEmpty && !state.notesMode) {
-      widget.controller.setNotesMode(true);
+    if (state.contentMode != 'numbers') {
+      await _animalAssets.ensureLoaded();
     }
-    if (state.contentMode != 'numbers' && _animalLoad != null) {
-      await _animalLoad;
-    }
-    final candidates = _possibleDigits(state, coord);
-    final withClear = [...candidates, 0];
     if (!mounted) {
       return;
     }
-    _candidateController.show(coord, withClear);
-  }
-
-  List<int> _possibleDigits(UiState state, Coord coord) {
-    final used = <int>{};
-    final boxRow = (coord.row ~/ 3) * 3;
-    final boxCol = (coord.col ~/ 3) * 3;
-    for (var r = boxRow; r < boxRow + 3; r += 1) {
-      for (var c = boxCol; c < boxCol + 3; c += 1) {
-        final value = state.board.cells[r][c].value;
-        if (value != null) {
-          used.add(value);
-        }
-      }
-    }
-    final candidates = <int>[];
-    for (var d = 1; d <= 9; d += 1) {
-      if (!used.contains(d)) {
-        candidates.add(d);
-      }
-    }
-    return candidates;
+    widget.controller.onBoardCellTapped(coord);
   }
 
   void _handleCheckOrSolution(UiState state) {
-    _candidateController.hide();
     if (state.gameOver) {
       widget.controller.onShowSolution();
       return;
     }
     widget.controller.onCheckSolution();
-  }
-
-  Set<int> _selectedNotes(UiState state) {
-    final coord = _candidateController.candidateCoord;
-    if (coord == null) {
-      return {};
-    }
-    return state.board.cells[coord.row][coord.col].notes.toSet();
   }
 }

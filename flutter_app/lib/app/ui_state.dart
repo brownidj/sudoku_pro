@@ -42,6 +42,9 @@ class UiState {
   final String puzzleMode;
   final Coord? selected;
   final bool gameOver;
+  final bool candidateVisible;
+  final List<int> candidateDigits;
+  final Set<int> candidateSelectedNotes;
 
   const UiState({
     required this.board,
@@ -55,5 +58,8 @@ class UiState {
     required this.puzzleMode,
     required this.selected,
     required this.gameOver,
+    required this.candidateVisible,
+    required this.candidateDigits,
+    required this.candidateSelectedNotes,
   });
 }
